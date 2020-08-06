@@ -19,11 +19,11 @@ import tkinter as tk
 from tkinter import filedialog, ttk
 from pathlib import Path
 from bs4 import BeautifulSoup
-import subprocess, json, threading, statistics, time
+import subprocess, json, threading, statistics, time, csv
 import concurrent.futures
 
 name='INFOBAR'
-version='1.5'
+version='2.0'
 
 # helper class for common gui widgets
 class Elements:
@@ -160,7 +160,6 @@ class Settings:
         self.D.insert(0,self.config.user_options[1])
         self.den.insert(0,self.config.user_options[2])
 
-
         # File extensions options
         self.file_options=Elements(self.f4)
         # Extensions to remove
@@ -243,19 +242,67 @@ class Viewer:
         self.fr=tk.Frame(parent,borderwidth=1, relief='raised', padx=20,pady=10)
         self.fr.pack()
 
-    def display(self,im_list):
-        self.clearFrame()
-        for i in range(0,len(im_list)):
-            self.fr.rowconfigure(i,weight=1)
-            im_path=im_list[i]
-            photo=tk.PhotoImage(file=im_path)
-            label = tk.Label(self.fr, image=photo,pady=20)
-            label.photo=photo
-            label.grid(row=i)
+    def display(self,im_list,mode):
 
-    def clearFrame(self):
+        self.clearFrame(self.fr)
+        if mode == 1:
+            main_im_list = im_list
+            frame = self.fr
+
+        if mode == 2:
+            frame = self.fr
+            IC_im_list = im_list
+
+        if mode == 3:
+            main_im_list = [im_list[-2], im_list[-1]]
+            frame = tk.Frame(self.fr,borderwidth=1, relief='raised', padx=20,pady=10)
+            frame.pack(side='right')
+            frame_left = tk.Frame(self.fr,borderwidth=1, relief='raised', padx=20,pady=10)
+            frame_left.pack(side='left')
+            self.IC_im_list = im_list[:len(im_list) - 2]
+            self.ic = len(self.IC_im_list)
+            self.j = 0
+
+            el = Elements(frame_left)
+            el.button('Previous',self.scroll,-1,0,0,'e',1)
+            el.button('  Next  ',self.scroll,1,1,0,'w',1)
+            self.frame_scroll = tk.Frame(frame_left, borderwidth=1, relief='raised', padx=20, pady=10)
+            self.frame_scroll.grid(row=1, columnspan=2)
+            self.scroll_viewer()
+
+        if mode != 2:
+            for i in range(0, len(main_im_list)):
+                self.fr.rowconfigure(i, weight=1)
+                im_path=main_im_list[i]
+                photo=tk.PhotoImage(file=im_path)
+                label = tk.Label(frame, image=photo, pady=20)
+                label.photo = photo
+                label.grid(row=i)
+
+
+    def scroll(self, scr):
+        self.j += scr
+        if (self.j >= self.ic):
+            self.j = self.ic-1
+        if self.j<0:
+            self.j = 0
+
+        self.clearFrame(self.frame_scroll)
+        self.scroll_viewer()
+
+    def scroll_viewer(self):
+        ic_im_path = self.IC_im_list[self.j]
+        photo = tk.PhotoImage(file=ic_im_path)
+        label = tk.Label(self.frame_scroll, image=photo, pady=20)
+        label.photo = photo
+        label.grid(row=0)
+        print(ic_im_path)
+
+
+
+    def clearFrame(self,frame):
         # destroy all widgets from frame
-        for widget in self.fr.winfo_children():
+        for widget in frame.winfo_children():
            widget.destroy()
 
     @staticmethod
@@ -307,13 +354,14 @@ class MainArea(tk.Frame):
     # method for calling directory picker
     def selectPath(self):
         self.file_path = appFuncs.selectPath(self.file_path)
+        # self.file_path = '/home/quest/Neiroimaging/Bilateral_Jed/'
 
         self.stat.set('Database Selected: %s', self.file_path)
         self.result_tree.file_path = self.file_path
 
     # executed on clicking search button
     def search(self):
-        self.viewer.clearFrame()
+        self.viewer.clearFrame(self.viewer.fr)
         dataset = self.dataset.get()
         identifier=f'*{dataset}*.feat'
         if dataset=='':identifier=f'*.feat'
@@ -437,7 +485,7 @@ class result_window:
                 self.relative = [0, 0]
         self.set_motion_stat()
 
-    # generate que for processing
+    # generate queue for processing
     def queue(self):
         fl = self.fileList
         # id = list(range(0, len(fl)))
@@ -479,19 +527,34 @@ class result_window:
             im_list=[]
             for i in name:
                 im_list.append(path/i)
-            self.viewer.display(im_list)
+            self.viewer.display(im_list,mode=1)
 
     def right_click(self, event):
         iid = self.tree.identify_row(event.y)
         if iid != '':
-            iid=int(iid)
+            iid = int(iid)
             outpath = self.fileList[iid][1]
             path = appFuncs.generateProcessedOutpath(outpath)
             pvp = self.fileList[iid][3]
             pop=self.fileList[iid][4]
-            if pop==1 and pvp==1:
-                im_list = [path / 'rendered_thresh_zstat1.png', path / 'tsplot' / 'tsplot_zstat1.png']
-                self.viewer.display(im_list)
+            if pvp == 1:
+                motion_IC_file = outpath / 'classified_motion_ICs.txt'
+                h = open(motion_IC_file,'r')
+                content =h.readlines()
+                for line in content:
+                    motion_IC = line.split(',')
+                    motion_IC = list(map(int,motion_IC))
+                im_list= []
+                for IC in motion_IC:
+                    im_list.append(outpath/'melodic.ica'/'report'/f'IC_{IC}_thresh.png')
+                    mode = 2
+
+            if pop == 1 and pvp == 1:
+                im_list_post = [path / 'rendered_thresh_zstat1.png', path / 'tsplot' / 'tsplot_zstat1.png']
+                im_list += im_list_post
+                mode = 3
+            self.viewer.display(im_list,mode)
+
 
     def middle_click(self,event):
         iid = int(self.tree.identify_row(event.y))
@@ -605,6 +668,10 @@ class executor:
             args = ["python2", str(self.icaPath), "-feat", str(row[0]), "-out", str(row[1])] + self.aux_args
             que.append([args,row[-1]])
         return que
+
+
+
+
 #-----------------------------------------------------------------------------------------------------------------------
 
 class StatusBar(tk.Frame):
