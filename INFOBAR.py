@@ -19,7 +19,7 @@ import tkinter as tk
 from tkinter import filedialog, ttk
 from pathlib import Path
 from bs4 import BeautifulSoup
-import subprocess, json, threading, statistics, time, csv
+import subprocess, json, threading, statistics, time
 import concurrent.futures
 
 name='INFOBAR'
