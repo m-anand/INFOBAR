@@ -12,7 +12,8 @@ The software is written in Python 3 and can be launched from a bash prompt. To s
 
 `python3 <path_to_file>/INFOBAR.py`
 
-![Main Window](help/Main.png)
+![Main Window](help/MainWindow.png)
+
 The software searches for `.feat` folders generated after pre-pocessing through FSL. 
 
 In the main window, there are options to select the Database location, Search using task/dataset names, and Filter using additional strings.
