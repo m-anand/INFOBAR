@@ -573,7 +573,8 @@ class result_window:
                 im_list_post = [path / 'rendered_thresh_zstat1.png', path / 'tsplot' / 'tsplot_zstat1.png']
                 im_list += im_list_post
                 mode = 3
-            self.viewer.display(im_list, mode)
+            if pvp == 1:
+                self.viewer.display(im_list, mode)
 
 
     def middle_click(self,event):
