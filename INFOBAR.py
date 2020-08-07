@@ -234,50 +234,73 @@ class About:
 #-----------------------------------------------------------------------------------------------------------------------
 
 class Viewer:
+
     def __init__(self,parent):
         self.parent=parent
         parent.protocol("WM_DELETE_WINDOW", self.do_nothing)
         parent.minsize(300,400)
         self.parent.title(name+': Image Viewer')
-        self.fr=tk.Frame(parent,borderwidth=1, relief='raised', padx=20,pady=10)
+        self.fr=tk.Frame(parent,borderwidth=1, padx=20,pady=10)
         self.fr.pack()
 
-    def display(self,im_list,mode):
 
+    def display(self, im_list, mode):
         self.clearFrame(self.fr)
-        if mode == 1:
-            main_im_list = im_list
-            frame = self.fr
 
+        # Unprocessed viewer
+        if mode == 1:
+            self.main_im_list = im_list
+            self.labels = ['Translation', 'Rotation', 'Displacement']
+            frame = self.fr
+            self.main_image_viewer(frame)
+
+        # Processed but not post processed
         if mode == 2:
             frame = self.fr
-            IC_im_list = im_list
-
-        if mode == 3:
-            main_im_list = [im_list[-2], im_list[-1]]
-            frame = tk.Frame(self.fr,borderwidth=1, relief='raised', padx=20,pady=10)
-            frame.pack(side='right')
-            frame_left = tk.Frame(self.fr,borderwidth=1, relief='raised', padx=20,pady=10)
-            frame_left.pack(side='left')
-            self.IC_im_list = im_list[:len(im_list) - 2]
-            self.ic = len(self.IC_im_list)
-            self.j = 0
-
-            el = Elements(frame_left)
-            el.button('Previous',self.scroll,-1,0,0,'e',1)
-            el.button('  Next  ',self.scroll,1,1,0,'w',1)
-            self.frame_scroll = tk.Frame(frame_left, borderwidth=1, relief='raised', padx=20, pady=10)
-            self.frame_scroll.grid(row=1, columnspan=2)
+            self.IC_im_list = im_list
+            self.scroll_viewer_setup(frame)
             self.scroll_viewer()
 
-        if mode != 2:
-            for i in range(0, len(main_im_list)):
-                self.fr.rowconfigure(i, weight=1)
-                im_path=main_im_list[i]
-                photo=tk.PhotoImage(file=im_path)
-                label = tk.Label(frame, image=photo, pady=20)
-                label.photo = photo
-                label.grid(row=i)
+        # Post processed
+        if mode == 3:
+            self.main_im_list = [im_list[-2], im_list[-1]]
+            self.labels = ['zstat Lightbox', 'Model Fit']
+            # Post processed viewer frame
+            frame = tk.Frame(self.fr,borderwidth=1, padx=20,pady=10)
+            frame.pack(side='right')
+            self.main_image_viewer(frame)
+
+            # Motion IC viewer frame
+            frame_left = tk.Frame(self.fr,borderwidth=1,  padx=20, pady=10)
+            frame_left.pack(side='left')
+            self.IC_im_list = im_list[:len(im_list) - 2]
+            self.scroll_viewer_setup(frame_left)
+            self.scroll_viewer()
+
+
+    def main_image_viewer(self, frame):
+        el = Elements(frame)
+        for i in range(0, len(self.main_im_list)):
+            el.label1(self.labels[i], 0, 2*i, 'nesw', 1, 1)
+            self.fr.rowconfigure(2*i+1, weight=1)
+            im_path = self.main_im_list[i]
+            photo = tk.PhotoImage(file=im_path)
+            label = tk.Label(frame, image=photo, pady=20)
+            label.photo = photo
+            label.grid(row=2*i+1)
+
+
+    def scroll_viewer_setup(self,fr):
+        self.ic = len(self.IC_im_list)
+        self.j = 0
+        self.count = tk.StringVar()
+        self.count.set(f'{self.j + 1} of {self.ic} Motion associated independent components')
+        el = Elements(fr)
+        el.button('Previous', self.scroll, -1, 0, 0, 'e', 1)
+        el.button('  Next  ', self.scroll, 1, 1, 0, 'w', 1)
+        el.label2(self.count, 2, 0, 'w')
+        self.frame_scroll = tk.Frame(fr, borderwidth=1,  padx=20, pady=10)
+        self.frame_scroll.grid(row=1, columnspan=10)
 
 
     def scroll(self, scr):
@@ -286,7 +309,7 @@ class Viewer:
             self.j = self.ic-1
         if self.j<0:
             self.j = 0
-
+        self.count.set(f'{self.j + 1} of {self.ic} components')
         self.clearFrame(self.frame_scroll)
         self.scroll_viewer()
 
@@ -297,7 +320,6 @@ class Viewer:
         label.photo = photo
         label.grid(row=0)
         print(ic_im_path)
-
 
 
     def clearFrame(self,frame):
@@ -354,8 +376,6 @@ class MainArea(tk.Frame):
     # method for calling directory picker
     def selectPath(self):
         self.file_path = appFuncs.selectPath(self.file_path)
-        # self.file_path = '/home/quest/Neiroimaging/Bilateral_Jed/'
-
         self.stat.set('Database Selected: %s', self.file_path)
         self.result_tree.file_path = self.file_path
 
@@ -553,7 +573,7 @@ class result_window:
                 im_list_post = [path / 'rendered_thresh_zstat1.png', path / 'tsplot' / 'tsplot_zstat1.png']
                 im_list += im_list_post
                 mode = 3
-            self.viewer.display(im_list,mode)
+            self.viewer.display(im_list, mode)
 
 
     def middle_click(self,event):
