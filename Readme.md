@@ -10,7 +10,7 @@ tkinter , bs4, statistics, futures, json, threading
 
 If running the program produces en error on missing modules (eg  `ModuleNotFoundError: No module named <Module_Name>`), simply install that module using the following command:
 
-`python3 pip install <module_name>` (eg, `python3 pip install bs4 futures` for missing bs4 and futures module). 
+`pip install <module_name>` (eg, `pip install bs4 futures` for missing bs4 and futures module). 
 
 
 
