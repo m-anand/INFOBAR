@@ -238,7 +238,7 @@ class Viewer:
     def __init__(self,parent):
         self.parent=parent
         parent.protocol("WM_DELETE_WINDOW", self.do_nothing)
-        parent.minsize(300,400)
+        parent.minsize(300, 400)
         self.parent.title(name+': Image Viewer')
         self.fr=tk.Frame(parent,borderwidth=1, padx=20,pady=10)
         self.fr.pack()
@@ -388,7 +388,7 @@ class MainArea(tk.Frame):
         # Search for all files that match task
         search_list = Path(self.file_path).rglob(identifier)
         filtered_list = self.apply_filters(search_list)
-        self.result_tree.fileList=self.aggregated_list(filtered_list)
+        self.result_tree.fileList = self.aggregated_list(filtered_list)
         # Refresh results display
         self.result_tree.display()  # display the results
 
@@ -403,7 +403,7 @@ class MainArea(tk.Frame):
             fl = file_list
         return fl
 
-    def aggregated_list(self,filtered_list):
+    def aggregated_list(self, filtered_list):
         prefix = self.config.prefeat_identifier
         suffix = self.config.output_identifier
         fl = []
@@ -425,9 +425,9 @@ class MainArea(tk.Frame):
     # Routed here from processThreader when Process button is pressed
     def process(self):
         self.stat.set('Processing...')
-        queue=self.result_tree.queue()
+        queue = self.result_tree.queue()
         t1=time.perf_counter()
-        process_queue = executor(queue, self.config.icaPath, self.overwrite.get(), self.result_tree.processing_status,self.config.user_options)
+        process_queue = executor(queue, self.config.icaPath, self.overwrite.get(), self.result_tree.processing_status, self.config.user_options, self.result_tree.fileList)
         process_queue.threader()        # put the queue on multi-threaded processing
         t2 = time.perf_counter()
         self.stat.set(f'Processing Completed in {round((t2-t1)/60)} minutes')
@@ -473,7 +473,7 @@ class result_window:
         self.rel=[]
         for row in self.fileList:
             inPath = row[0]
-            motion=row[2]
+            motion = row[2]
             pvp = row[3]
             pop = row[4]
 
@@ -538,9 +538,9 @@ class result_window:
         MotionStats = 'Abs:' + str(motion[0]) + ' Rel: ' + str(motion[1])
         self.tree.set(iid, 'Motion', MotionStats)
 
-    def left_click(self,event):
+    def left_click(self, event):
         iid = self.tree.identify_row(event.y)
-        if not iid=='':
+        if not iid == '':
             iid=int(iid)
             path = self.fileList[iid][0] / 'mc'
             name = ['trans.png', 'rot.png', 'disp.png']
@@ -551,6 +551,7 @@ class result_window:
 
     def right_click(self, event):
         iid = self.tree.identify_row(event.y)
+
         if iid != '':
             iid = int(iid)
             outpath = self.fileList[iid][1]
@@ -660,23 +661,25 @@ class appFuncs:
 
 #  class for parallelization and execution
 class executor:
-    def __init__(self, list, icaPath, overwrite, status,user_options):
-        self.fl=list
-        self.icaPath=icaPath
-        self.ov=overwrite
-        self.status=status
+    def __init__(self, list, icaPath, overwrite, status, user_options, result_tree):
+        self.fl = list
+        self.icaPath = icaPath
+        self.ov = overwrite
+        self.status = status
+        self.result_tree = result_tree
         # self.aux_args=[]
         self.aux_args=['-dim',user_options[1],'-den',user_options[2]]
         if user_options[0]!='': self.aux_args.extend(['-tr',user_options[0]])
-        if self.ov==1: self.aux_args.append("-overwrite")
+        if self.ov == 1: self.aux_args.append("-overwrite")
 
     def call_ICA(self, que):
-        args=que[0]
-        id=que[1]
-        print(args)
+        args = que[0]
+        id = que[1]
+        # print(args)
         self.status(id, 'Processing...')
         subprocess.run(args)
-        self.status(id,'Processed')
+        self.status(id, 'Processed')
+        self.result_tree[id][3] = 1
 
     def threader(self):
         que=self.queue_prep()
@@ -686,8 +689,8 @@ class executor:
     def queue_prep(self):
         que=[]
         for row in self.fl:
-            args = ["python2", str(self.icaPath), "-feat", str(row[0]), "-out", str(row[1])] + self.aux_args
-            que.append([args,row[-1]])
+            args = ["python2.7", str(self.icaPath), "-feat", str(row[0]), "-out", str(row[1])] + self.aux_args
+            que.append([args, row[-1]])
         return que
 
 
