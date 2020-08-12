@@ -124,8 +124,10 @@ class Menubar:
         About(ab)
 
     def help(self):
-        help_root = tk.Toplevel()
-        Help(help_root)
+        # help_root = tk.Toplevel()
+        # Help()
+        url = 'https://github.com/m-anand/INFOBAR'
+        webbrowser.open(url, new=1)
 
 class Settings:
     def __init__(self, parent,config):
@@ -201,11 +203,6 @@ class Settings:
         self.pathToIca = tk.filedialog.askopenfilename(filetypes=[("Python Files","*.py")])
         self.config.icaPath = self.pathToIca
         self.icaPath.set(self.pathToIca)
-
-class Help:
-    def __init__(self, parent):
-        url = 'https://github.com/m-anand/INFOBAR'
-        webbrowser.open(url,new=1)
 
 
 class About:
