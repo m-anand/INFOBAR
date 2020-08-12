@@ -19,7 +19,7 @@ import tkinter as tk
 from tkinter import filedialog, ttk
 from pathlib import Path
 from bs4 import BeautifulSoup
-import subprocess, json, threading, statistics, time
+import subprocess, json, threading, statistics, time, webbrowser
 import concurrent.futures
 
 name='INFOBAR'
@@ -65,7 +65,7 @@ class config:
         self.allocate()
 
     def readSettings(self):
-        with open('settings.json') as settingsFile:
+        with open(Path(__file__).parent.absolute()/'settings.json') as settingsFile:
             self.settings_dict = json.load(settingsFile)
 
     def allocate(self):
@@ -204,23 +204,15 @@ class Settings:
 
 class Help:
     def __init__(self, parent):
-        self.parent = parent
-        parent.title('Help')
-        self.helpMessage = self.readHelp()
-        m = tk.Message(self.parent, text=self.helpMessage)
-        m.pack()
+        url = 'https://github.com/m-anand/INFOBAR'
+        webbrowser.open(url,new=1)
 
-    def readHelp(self):
-        helpFile = open('Manual.txt', 'r')
-        help = helpFile.read()
-        helpFile.close()
-        return help
 
 class About:
     def __init__(self, parent):
         self.parent = parent
         self.parent.title("About "+name)
-        self.parent.geometry('400x220')
+        self.parent.geometry('400x250')
         self.parent.columnconfigure(0, weight=1)
         self.parent.resizable(width=False, height=False)
 
@@ -241,8 +233,7 @@ class Viewer:
         parent.minsize(300, 400)
         self.parent.title(name+': Image Viewer')
         self.fr=tk.Frame(parent,borderwidth=1, padx=20,pady=10)
-        self.fr.pack()
-
+        self.fr.pack(fill ="both", expand = True)
 
     def display(self, im_list, mode):
         self.clearFrame(self.fr)
@@ -300,7 +291,7 @@ class Viewer:
         el.button('  Next  ', self.scroll, 1, 1, 0, 'w', 1)
         el.label2(self.count, 2, 0, 'w')
         self.frame_scroll = tk.Frame(fr, borderwidth=1,  padx=20, pady=10)
-        self.frame_scroll.grid(row=1, columnspan=10)
+        self.frame_scroll.grid(row=1, columnspan=10, sticky='nsew')
 
 
     def scroll(self, scr):
@@ -318,7 +309,7 @@ class Viewer:
         photo = tk.PhotoImage(file=ic_im_path)
         label = tk.Label(self.frame_scroll, image=photo, pady=20)
         label.photo = photo
-        label.grid(row=0)
+        label.grid(row=0, sticky='nsew')
         print(ic_im_path)
 
 
