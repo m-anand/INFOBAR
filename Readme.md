@@ -27,14 +27,15 @@ In the main window, there are options to select the Database location, Search us
     
 3. Type in a task name and click `Search` to search for a specific task/dataset name.
 4. Type in filters to narrow search based on subjects/ groups etc.
+5. To delete a dataset from the queue, press `d`.
 5. To process all  subjects shown in the display panel, click `Process`.
 6. Alternatively, select the datasets to be processed. Press `ctrl` to select multiple datasets. Click `Process` to process selected subjects. Click `Clear` to clear selection. 
 7. Left click on a dataset to view *MCFLIRT rotation*, *translation* and *displacement* plots.
 
 ![Pre Processed Viewer](help/PreViewer.png)
 
-8. Right click on a dataset to scroll through the independent components associated with motion identified by the algorithm.
-9. If the data has been post processed *zstat1 lightbox image* and *peak voxel activation model fit*. will also be shown.
+8. Right/middle click or press `w` on a dataset to view the independent components associated with motion identified by the algorithm.
+9. If the data has been post processed, these actions will also show *zstat1 lightbox image* and *peak voxel activation model fit*.
 
 ![Post Processed Viewer](help/PostViewer.png)
 
@@ -58,10 +59,15 @@ ICA-AROMA provides options to change the default TR, dimensionality reductions a
 2.	Parameters for ICA-AROMA:
 	1. tr (secs): TR in seconds. If this is not specified, the TR will be extracted from the header of the fMRI file using ‘fslinfo’. In that case, make sure the TR in the header is correct!
 	2. 	dim:  Dimensionality reduction into a defined number of dimensions when running MELODIC (default is 0; automatic estimation)
-	3. 	den: Type of denoising strategy (default is nonaggr): no: only classification, no denoising nonaggr: non-aggresssive denoising, i.e. partial component regression (default) aggr: aggressive denoising, i.e. full component regression both: both aggressive and non-aggressive denoising (two outputs)
+	3. 	den: Type of denoising strategy (default is nonaggr):). Options include:
+		1. no: only classification, no denoising 
+		2. nonaggr: non-aggresssive denoising, i.e. partial component regression (default) 
+		3. aggr: aggressive denoising, i.e. full component regression 
+		4. both: both aggressive and non-aggressive denoising (two outputs)
+
 3.	File Options:
-a.	Pre feat Identifier:  If the preprocessed files are stored with a unique keyword identifier for record keeping, this keyword can be specified here. This keyword will be replaced by the Output Identifier keyword. If the keyword is not found, the folder name will simply be augmented with the Output Identifier. Default value is ‘_pre_ICAAROMA’
-b.	Output Identifier: Keyword to replace Pre feat identifier. Default value is ‘_AROMA_Output’.
+	1. Pre feat Identifier:  If the preprocessed files are stored with a unique keyword identifier for record keeping, this keyword can be specified here. This keyword will be replaced by the Output Identifier keyword. If the keyword is not found, the folder name will simply be augmented with the Output Identifier. Default value is ‘_pre_ICAAROMA’
+	2. Output Identifier: Keyword to replace Pre feat identifier. Default value is ‘_AROMA_Output’.
 
  Settings tab also allows the user to select the location of the ICA-AROMA program file for function call. The settings are saved in a JSON file. 
 
