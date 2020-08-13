@@ -5,11 +5,7 @@ INFOBAR is a GUI tool to impletment ICA-AROMA, especially useful for processing 
 1. Extract contents of INFOBAR.zip to the local ICA-AROMA-master folder (The original ICA-AROMA program can be downloaded [here](https://github.com/maartenmennes/ICA-AROMA).). 
 2. Alternatively, extract the contents to any desired location. Upon first run, go to Settings and select the location to `ICA_AROMA.py` in the panel, then click save. This will save the default configuration.
 
-Python modules required: tkinter , bs4, statistics, futures, json, threading 
-
-If running the program produces en error on missing modules (eg  `ModuleNotFoundError: No module named <Module_Name>`), simply install that module using the following command:
-
-`pip install <module_name>` (eg, `pip install bs4 futures` for missing bs4 and futures module). 
+Install Python modules dependencies using: `python3 -m pip install -r requirements.txt`
 
 
 
@@ -43,11 +39,15 @@ In the main window, there are options to select the Database location, Search us
 ![Post Processed Viewer](help/PostViewer.png)
 
        
-## Preprocessing steps
+## Preprocessing and Postprocessing steps
 INFOBAR requires the data to be processed through FSL. Preprocessing involves:
-1. Motion correction
-2. 4D mean intensity normalization
-3. Spatial smoothing (6mm FWHM)
+1. Head movement correction by volume-realignment to the middle volume using MCFLIRT.
+2. Global 4D mean intensity normalization.
+3. Spatial smoothing (e.g. 6mm FWHM)
+
+Importantly, no temporal filtering should be applied at this stage of processing.
+
+Postprocessing includes nuisance regression: WM, CSF & linear trend and high-pass filtering
 
 ## Settings
 
