@@ -65,4 +65,4 @@ b.	Output Identifier: Keyword to replace Pre feat identifier. Default value is â
 
  Settings tab also allows the user to select the location of the ICA-AROMA program file for function call. The settings are saved in a JSON file. 
 
- ![Workflow Video](help/workflow.gif)
+ ![Workflow Video](https://streamable.com/ezbfoe)
