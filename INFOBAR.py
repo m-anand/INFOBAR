@@ -385,7 +385,7 @@ class MainArea(tk.Frame):
     # Filters out based on presence of a report_prestat.html file
     @staticmethod
     def verify_dataset(file_list):
-        fl = [dataset for dataset in file_list if Path(dataset/'report_prestats.html').exists()]
+        fl = [dataset for dataset in file_list if (Path(dataset/'report_prestats.html').exists()) and not(Path(dataset/'cluster_zstat1.html').exists())]
         return fl
 
     def apply_filters(self,file_list):
