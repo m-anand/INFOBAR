@@ -64,3 +64,5 @@ a.	Pre feat Identifier:  If the preprocessed files are stored with a unique keyw
 b.	Output Identifier: Keyword to replace Pre feat identifier. Default value is ‘_AROMA_Output’.
 
  Settings tab also allows the user to select the location of the ICA-AROMA program file for function call. The settings are saved in a JSON file. 
+
+ ![Workflow Video](help/workflow.gif)
