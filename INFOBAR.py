@@ -455,7 +455,7 @@ class result_window:
         self.tree.column("Status", width=100, stretch=tk.NO, anchor='center')
 
         self.tree.bind('<Button-1>',self.left_click)
-        self.tree.bind('d', self.delete_entry)
+        self.tree.bind('<Button-2>', self.delete_entry)
         self.tree.bind('<Double-Button-1>', self.double_left_click)
         self.last_focus=None
 
