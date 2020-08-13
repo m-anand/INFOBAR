@@ -209,14 +209,14 @@ class About:
     def __init__(self, parent):
         self.parent = parent
         self.parent.title("About "+name)
-        self.parent.geometry('400x250')
+        self.parent.geometry('400x300')
         self.parent.columnconfigure(0, weight=1)
         self.parent.resizable(width=False, height=False)
 
         lb1 = tk.Label(self.parent, text=name, font=("Arial Bold", 20))
         lb1.grid(row=0, sticky='NSEW')
 
-        lb2 = tk.Label(self.parent, text=f"Version: {version}\nLicense: LGPL\nCopyright (C) 2020  Manish Anand \n\nThis program comes with ABSOLUTELY NO WARRANTY.\nThis is free software, and you are welcome to redistribute \nit under certain conditions.\n\nSpecial thanks to: \nJed A. Diekfuss \nAlexis B. Slutsky-Ganesh",justify="left")
+        lb2 = tk.Label(self.parent, text=f"Version: {version}\nLicense: LGPL\nCopyright (C) 2020  Manish Anand \n\nThis program comes with ABSOLUTELY NO WARRANTY.\nThis is free software, and you are welcome to redistribute \nit under certain conditions.\n\nSpecial thanks to: \n Jed A. Diekfuss \n Alexis B. Slutsky-Ganesh \n Dustin R. Grooms \n Scott Bonnette \n Gregory D. Myer",justify="left")
         lb2.grid(row=2, sticky='EW')
 
 
@@ -680,8 +680,6 @@ class executor:
             args = ["python2.7", str(self.icaPath), "-feat", str(row[0]), "-out", str(row[1])] + self.aux_args
             que.append([args, row[-1]])
         return que
-
-
 
 
 #-----------------------------------------------------------------------------------------------------------------------
