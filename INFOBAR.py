@@ -83,7 +83,7 @@ class config:
 
     def writeSettings(self):
         self.reverse_allocate()
-        with open('settings.json', 'w') as json_file:
+        with open(Path(__file__).parent.absolute()/'settings.json', 'w') as json_file:
             json.dump(self.settings_dict, json_file)
 
     def loadDefaults(self):
@@ -307,8 +307,6 @@ class Viewer:
         label = tk.Label(self.frame_scroll, image=photo, pady=20)
         label.photo = photo
         label.grid(row=0, sticky='nsew')
-        print(ic_im_path)
-
 
     def clearFrame(self,frame):
         # destroy all widgets from frame
@@ -457,8 +455,8 @@ class result_window:
         self.tree.column("Status", width=100, stretch=tk.NO, anchor='center')
 
         self.tree.bind('<Button-1>',self.left_click)
-        self.tree.bind('<Button-2>', self.middle_click)
-        self.tree.bind('<Button-3>', self.right_click)
+        self.tree.bind('d', self.delete_entry)
+        self.tree.bind('<Double-Button-1>', self.double_left_click)
         self.last_focus=None
 
 
@@ -545,7 +543,7 @@ class result_window:
                 im_list.append(path/i)
             self.viewer.display(im_list,mode=1)
 
-    def right_click(self, event):
+    def double_left_click(self, event):
         iid = self.tree.identify_row(event.y)
 
         if iid != '':
@@ -574,7 +572,7 @@ class result_window:
                 self.viewer.display(im_list, mode)
 
 
-    def middle_click(self,event):
+    def delete_entry(self, event):
         iid = int(self.tree.identify_row(event.y))
         if not iid=='':
             iid=int(iid)
