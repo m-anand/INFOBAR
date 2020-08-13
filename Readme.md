@@ -72,4 +72,5 @@ ICA-AROMA provides options to change the default TR, dimensionality reductions a
  Settings tab also allows the user to select the location of the ICA-AROMA program file for function call. The settings are saved in a JSON file. 
 
 An example workflow is shown in the following video:
+
  [![Workflow Video](https://img.youtube.com/vi/EkWjREknHBg/0.jpg)](https://youtu.be/EkWjREknHBg)
