@@ -455,7 +455,7 @@ class result_window:
         self.tree.column("Status", width=100, stretch=tk.NO, anchor='center')
 
         self.tree.bind('<Button-1>',self.left_click)
-        self.tree.bind('<Button-2>', self.delete_entry)
+        self.tree.bind('d', self.delete_entry)
         self.tree.bind('<Double-Button-1>', self.double_left_click)
         self.last_focus=None
 
@@ -534,6 +534,7 @@ class result_window:
 
     def left_click(self, event):
         iid = self.tree.identify_row(event.y)
+        self.clickID =iid
         if not iid == '':
             iid=int(iid)
             path = self.fileList[iid][0] / 'mc'
@@ -572,13 +573,22 @@ class result_window:
                 self.viewer.display(im_list, mode)
 
 
-    def delete_entry(self, event):
+    def delete_entry1(self, event):
         iid = int(self.tree.identify_row(event.y))
         if not iid=='':
             iid=int(iid)
             del self.fileList[iid]
             self.delete()
             self.display()
+
+    def delete_entry(self, event):
+        iid = self.clickID
+        if not iid=='':
+            iid=int(iid)
+            del self.fileList[iid]
+            self.delete()
+            self.display()
+            self.clickID = ''
 
 #   helper class for common use functions
 class appFuncs:
