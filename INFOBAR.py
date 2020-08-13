@@ -375,10 +375,18 @@ class MainArea(tk.Frame):
         if dataset=='':identifier=f'*.feat'
         # Search for all files that match task
         search_list = Path(self.file_path).rglob(identifier)
+        search_list = self.verify_dataset(search_list)
         filtered_list = self.apply_filters(search_list)
         self.result_tree.fileList = self.aggregated_list(filtered_list)
         # Refresh results display
         self.result_tree.display()  # display the results
+
+    # Checks if the selected dataset is a preprocessed dataset for one individual.
+    # Filters out based on presence of a report_prestat.html file
+    @staticmethod
+    def verify_dataset(file_list):
+        fl = [dataset for dataset in file_list if Path(dataset/'report_prestats.html').exists()]
+        return fl
 
     def apply_filters(self,file_list):
         # List of datasets as string for display purposes
@@ -617,8 +625,6 @@ class appFuncs:
         for i in fo:
             if i.is_dir() == True:
                 pop = 1
-
-
         return pop
 
     @staticmethod
