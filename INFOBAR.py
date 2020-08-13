@@ -456,7 +456,9 @@ class result_window:
 
         self.tree.bind('<Button-1>',self.left_click)
         self.tree.bind('d', self.delete_entry)
-        self.tree.bind('<Double-Button-1>', self.double_left_click)
+        self.tree.bind(('<Button-3>' ), self.double_left_click)
+        self.tree.bind(('<Button-2>'), self.double_left_click)
+        self.tree.bind(('w'), self.double_left_click)
         self.last_focus=None
 
 
@@ -545,9 +547,9 @@ class result_window:
             self.viewer.display(im_list,mode=1)
 
     def double_left_click(self, event):
-        iid = self.tree.identify_row(event.y)
-
+        iid = self.clickID
         if iid != '':
+            self.clickID = ''
             iid = int(iid)
             outpath = self.fileList[iid][1]
             path = appFuncs.generateProcessedOutpath(outpath)
@@ -572,14 +574,6 @@ class result_window:
             if pvp == 1:
                 self.viewer.display(im_list, mode)
 
-
-    def delete_entry1(self, event):
-        iid = int(self.tree.identify_row(event.y))
-        if not iid=='':
-            iid=int(iid)
-            del self.fileList[iid]
-            self.delete()
-            self.display()
 
     def delete_entry(self, event):
         iid = self.clickID
