@@ -124,9 +124,7 @@ class Menubar:
         About(ab)
 
     def help(self):
-        # help_root = tk.Toplevel()
-        # Help()
-        url = 'https://github.com/m-anand/INFOBAR'
+        url = 'help/Manual.pdf'
         webbrowser.open(url, new=1)
 
 class Settings:

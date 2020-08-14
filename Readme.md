@@ -1,5 +1,6 @@
-INFOBAR is a GUI tool to impletment ICA-AROMA, especially useful for processing large datasets and performing quality checks on the data.
+INFOBAR is a GUI tool to impletment [ICA-AROMA](https://github.com/maartenmennes/ICA-AROMA), especially useful for processing large datasets and performing quality checks on the data. 
 
+Note that the software currently implements the .feat processing functions of ICA-AROMA and cannot process raw NIfTI files.
 ## Installation
 
 1. Extract contents of INFOBAR.zip to the local ICA-AROMA-master folder (The original ICA-AROMA program can be downloaded [here](https://github.com/maartenmennes/ICA-AROMA).). 
@@ -71,6 +72,6 @@ ICA-AROMA provides options to change the default TR, dimensionality reductions a
 
  Settings tab also allows the user to select the location of the ICA-AROMA program file for function call. The settings are saved in a JSON file. 
 
-An example workflow is shown in the following video:
+An example workflow is shown in the following video: 
 
  [![Workflow Video](https://img.youtube.com/vi/EkWjREknHBg/0.jpg)](https://youtu.be/EkWjREknHBg)
