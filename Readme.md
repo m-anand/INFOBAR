@@ -18,7 +18,7 @@ The software is written in Python 3 and can be launched from a bash prompt. To s
 
 ![Main Window](help/MainWindow.png)
 
-The software searches for `.feat` folders generated after pre-pocessing through [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/) is required. 
+The software searches for `.feat` folders generated after pre-pocessing through [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/). 
 
 In the main window, there are options to select the Database location, Search using task/dataset names, and Filter using additional strings.
 
