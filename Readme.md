@@ -1,4 +1,4 @@
-INFOBAR is a GUI tool to impletment [ICA-AROMA](https://github.com/maartenmennes/ICA-AROMA), especially useful for processing large datasets and performing quality checks on the data. 
+INFOBAR is a GUI tool to impletment [ICA-AROMA](https://github.com/maartenmennes/ICA-AROMA), especially useful for processing large datasets and performing quality checks on the data.  
 
 Note that the software currently implements the .feat processing functions of ICA-AROMA and cannot process raw NIfTI files.
 ## Installation
@@ -18,7 +18,7 @@ The software is written in Python 3 and can be launched from a bash prompt. To s
 
 ![Main Window](help/MainWindow.png)
 
-The software searches for `.feat` folders generated after pre-pocessing through FSL. 
+The software searches for `.feat` folders generated after pre-pocessing through [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/) is required. 
 
 In the main window, there are options to select the Database location, Search using task/dataset names, and Filter using additional strings.
 
